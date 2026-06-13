@@ -11,4 +11,8 @@ def create_app():
         CommandHandler("start", start)
     )
 
+    app.add_handler(
+        CommandHandler("help", help_command)
+    )
+
     return app
