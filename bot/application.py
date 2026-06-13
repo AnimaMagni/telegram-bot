@@ -1,4 +1,5 @@
 from telegram.ext import Application, CommandHandler
+from handlers.help import help_command
 
 from bot.config import BOT_TOKEN
 from handlers.start import start
