@@ -9,7 +9,7 @@ from telegram.ext import MessageHandler, filters
 from handlers.channel_message import (
     handle_channel_message
 )
-
+from handlers.channels import channels_command
 
 
 def create_app():
@@ -26,6 +26,12 @@ def create_app():
     app.add_handler(
     CommandHandler("connect", connect_channel)
     )
+    app.add_handler(
+    CommandHandler(
+        "channels",
+        channels_command
+    )
+    )   
     app.add_handler(
     MessageHandler(
         filters.ALL,
