@@ -3,7 +3,6 @@ from database.db import get_connection
 
 def create_tables():
     conn = get_connection()
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -15,6 +14,18 @@ def create_tables():
             channel_username TEXT
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS scheduled_posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER,
+            channel_id INTEGER,
+            post_text TEXT,
+            publish_at TEXT,
+            is_sent INTEGER DEFAULT 0
+        )
+    """)
+    conn.commit()
+    conn.close()
     
 
 def save_channel(
@@ -71,3 +82,25 @@ def get_user_channels(user_id):
 
     return channels
 
+
+def channel_exists(user_id, channel_id):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT id
+        FROM channels
+        WHERE user_id = ?
+        AND channel_id = ?
+        """,
+        (user_id, channel_id)
+    )
+
+    result = cursor.fetchone()
+
+    conn.close()
+
+    return result is not None
