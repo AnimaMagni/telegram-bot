@@ -9,6 +9,10 @@ from handlers.channel_selector import (
 from handlers.date_handler import (
     date_handler
 )
+from handlers.cancel_handler import (
+    cancel_handler
+)
+
 
 
 async def text_router(
@@ -37,6 +41,13 @@ async def text_router(
     elif state == "waiting_date":
 
         await date_handler(
+            update,
+            context
+        )
+
+    elif state == "waiting_cancel_id":
+
+        await cancel_handler(
             update,
             context
         )

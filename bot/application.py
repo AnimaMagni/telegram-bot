@@ -4,9 +4,7 @@ from telegram.ext import (
     MessageHandler,
     filters
 )
-
 from bot.config import BOT_TOKEN
-
 from handlers.start import start
 from handlers.help import help_command
 from handlers.connect import connect_channel
@@ -16,14 +14,26 @@ from handlers.post import post_command
 from handlers.channel_message import (
     handle_channel_message
 )
-
 from handlers.text_router import (
     text_router
 )
-
 from handlers.error_handler import (
     error_handler
 )
+from services.scheduler import (
+    check_scheduled_posts
+)
+from handlers.scheduled import (
+    scheduled_command
+)
+from handlers.cancel import (
+    cancel_command
+)
+
+
+
+
+
 
 
 def create_app():
@@ -55,11 +65,26 @@ def create_app():
     )
 
     app.add_handler(
+    CommandHandler(
+        "scheduled",
+        scheduled_command
+        )
+    )
+
+
+    app.add_handler(
         CommandHandler(
             "post",
             post_command
         )
     )
+    app.add_handler(
+    CommandHandler(
+        "cancel",
+        cancel_command
+        )
+    )
+    
 
     app.add_handler(
         MessageHandler(
@@ -79,4 +104,9 @@ def create_app():
         error_handler
     )
 
+    app.job_queue.run_repeating(
+    check_scheduled_posts,
+    interval=30,
+    first=10
+    )
     return app
