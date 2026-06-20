@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-
+from datetime import datetime
 from database.models import get_user_channels
 
 
@@ -49,13 +49,22 @@ async def channel_selector(
                 f"📢 کانال {name} انتخاب شد."
             )
 
-            await update.message.reply_text(
-                "📅 تاریخ و زمان را وارد کنید.\n\n"
-                "مثال:\n"
-                "2026-06-20 20:30"
-            )
+            now = datetime.now().strftime(
+    "%Y-%m-%d %H:%M"
+)
 
-            return
+        await update.message.reply_text(
+            f"""
+        📅 تاریخ و زمان را وارد کنید
+
+        ⏰ زمان حال:
+        {now}
+
+        مثال:
+        2026-06-20 20:30
+        """
+        )
+        return
 
     await update.message.reply_text(
         "❌ کانال انتخاب شده پیدا نشد."

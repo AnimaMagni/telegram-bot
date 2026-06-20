@@ -30,6 +30,8 @@ from handlers.cancel import (
     cancel_command
 )
 
+from handlers.edit import edit_command
+from handlers.dashboard import dashboard_command
 
 
 
@@ -84,7 +86,21 @@ def create_app():
         cancel_command
         )
     )
-    
+
+    app.add_handler(
+    CommandHandler(
+        "edit",
+        edit_command
+        )
+    )
+
+    app.add_handler(
+        CommandHandler(
+            "dashboard",
+            dashboard_command
+        )
+    )
+        
 
     app.add_handler(
         MessageHandler(

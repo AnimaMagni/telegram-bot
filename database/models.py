@@ -1,3 +1,5 @@
+from itertools import count
+
 from database.db import get_connection
 
 
@@ -104,6 +106,7 @@ def channel_exists(user_id, channel_id):
     conn.close()
 
     return result is not None
+
 def save_scheduled_post(
     user_id,
     channel_id,
@@ -112,7 +115,6 @@ def save_scheduled_post(
 ):
 
     conn = get_connection()
-
     cursor = conn.cursor()
 
     cursor.execute(
@@ -134,8 +136,12 @@ def save_scheduled_post(
         )
     )
 
+    post_id = cursor.lastrowid
+
     conn.commit()
     conn.close()
+
+    return post_id
 
 def get_pending_posts():
 
@@ -252,4 +258,124 @@ def delete_scheduled_post(post_id):
 
     conn.commit()
     conn.close()
+
+
+def get_post_by_id(post_id, user_id):
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT
+            id,
+            post_text,
+            publish_at
+        FROM scheduled_posts
+        WHERE id = ?
+        AND user_id = ?
+        AND is_sent = 0
+        """,
+        (post_id, user_id)
+    )
+
+    post = cursor.fetchone()
+
+    conn.close()
+
+    return post
     
+def update_scheduled_post(
+    post_id,
+    post_text,
+    publish_at
+):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        UPDATE scheduled_posts
+        SET
+            post_text = ?,
+            publish_at = ?
+        WHERE id = ?
+        """,
+        (
+            post_text,
+            publish_at,
+            post_id
+        )
+    )
+
+    conn.commit()
+    conn.close()
+    
+
+def count_channels(user_id):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM channels
+        WHERE user_id = ?
+        """,
+        (user_id,)
+    )
+
+    count = cursor.fetchone()[0]
+
+    conn.close()
+
+    return count
+
+
+def count_scheduled_posts(user_id):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM scheduled_posts
+        WHERE user_id = ?
+        AND is_sent = 0
+        """,
+        (user_id,)
+    )
+
+    count = cursor.fetchone()[0]
+
+    conn.close()
+
+    return count
+
+def count_sent_posts(user_id):
+
+    conn = get_connection()
+
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM scheduled_posts
+        WHERE user_id = ?
+        AND is_sent = 1
+        """,
+        (user_id,)
+    )
+
+    count = cursor.fetchone()[0]
+
+    conn.close()
+
+    return count

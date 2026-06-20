@@ -12,7 +12,15 @@ from handlers.date_handler import (
 from handlers.cancel_handler import (
     cancel_handler
 )
-
+from handlers.edit_id_handler import (
+    edit_id_handler
+)
+from handlers.edit_text_handler import (
+    edit_text_handler
+)
+from handlers.edit_date_handler import (
+    edit_date_handler
+)
 
 
 async def text_router(
@@ -48,6 +56,27 @@ async def text_router(
     elif state == "waiting_cancel_id":
 
         await cancel_handler(
+            update,
+            context
+        )
+
+    elif state == "waiting_edit_id":
+
+        await edit_id_handler(
+            update,
+            context
+        )
+
+    elif state == "waiting_new_text":
+
+        await edit_text_handler(
+            update,
+            context
+        )
+
+    elif state == "waiting_new_date":
+
+        await edit_date_handler(
             update,
             context
         )
