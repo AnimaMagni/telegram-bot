@@ -44,6 +44,12 @@ async def date_handler(
         channel_id=context.user_data[
             "selected_channel_id"
         ],
+        content_type=context.user_data[
+            "content_type"
+        ],
+        file_id=context.user_data[
+            "file_id"
+        ],
         post_text=context.user_data[
             "post_text"
         ],

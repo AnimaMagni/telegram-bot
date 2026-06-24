@@ -21,6 +21,10 @@ def create_tables():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
             channel_id INTEGER,
+
+            content_type TEXT DEFAULT 'text',
+            file_id TEXT,
+
             post_text TEXT,
             publish_at TEXT,
             is_sent INTEGER DEFAULT 0
@@ -111,7 +115,9 @@ def save_scheduled_post(
     user_id,
     channel_id,
     post_text,
-    publish_at
+    publish_at,
+    content_type="text",
+    file_id=None
 ):
 
     conn = get_connection()
@@ -123,14 +129,18 @@ def save_scheduled_post(
         (
             user_id,
             channel_id,
+            content_type,
+            file_id,
             post_text,
             publish_at
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             user_id,
             channel_id,
+            content_type,
+            file_id,
             post_text,
             publish_at
         )
@@ -153,6 +163,8 @@ def get_pending_posts():
         SELECT
             id,
             channel_id,
+            content_type,
+            file_id,
             post_text,
             publish_at
         FROM scheduled_posts

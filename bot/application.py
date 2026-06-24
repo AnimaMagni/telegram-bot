@@ -111,7 +111,7 @@ def create_app():
 
     app.add_handler(
         MessageHandler(
-            filters.TEXT & ~filters.COMMAND,
+            filters.ALL & ~filters.COMMAND,
             text_router
         )
     )

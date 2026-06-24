@@ -14,7 +14,14 @@ async def check_scheduled_posts(context):
 
     for post in posts:
 
-        post_id, channel_id, post_text, publish_at = post
+        (
+            post_id,
+            channel_id,
+            content_type,
+            file_id,
+            post_text,
+            publish_at
+        ) = post
 
         publish_time = datetime.strptime(
             publish_at,
@@ -29,10 +36,44 @@ async def check_scheduled_posts(context):
 
         try:
 
-            await context.bot.send_message(
-                chat_id=channel_id,
-                text=post_text
-            )
+            if content_type == "text":
+
+                await context.bot.send_message(
+                    chat_id=channel_id,
+                    text=post_text
+                )
+
+            elif content_type == "photo":
+
+                await context.bot.send_photo(
+                    chat_id=channel_id,
+                    photo=file_id,
+                    caption=post_text
+                )
+
+            elif content_type == "video":
+
+                await context.bot.send_video(
+                    chat_id=channel_id,
+                    video=file_id,
+                    caption=post_text
+                )
+
+            elif content_type == "document":
+
+                await context.bot.send_document(
+                    chat_id=channel_id,
+                    document=file_id,
+                    caption=post_text
+                )
+
+            elif content_type == "audio":
+
+                await context.bot.send_audio(
+                    chat_id=channel_id,
+                    audio=file_id,
+                    caption=post_text
+                )
 
             mark_post_as_sent(post_id)
 
