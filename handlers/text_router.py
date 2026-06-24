@@ -1,3 +1,6 @@
+from handlers.menu_handler import (
+    menu_handler
+)
 from handlers.post_message import (
     post_message_handler
 )
@@ -23,10 +26,29 @@ from handlers.edit_date_handler import (
 )
 
 
+
+
 async def text_router(
     update,
     context
 ):
+
+    text = update.message.text
+
+    if text in [
+        "📝 پست جدید",
+        "📅 پست‌های زمان‌بندی شده",
+        "📊 داشبورد",
+        "📢 کانال‌های من",
+        "❓ راهنما"
+    ]:
+
+        await menu_handler(
+            update,
+            context
+        )
+
+        return
 
     state = context.user_data.get(
         "state"

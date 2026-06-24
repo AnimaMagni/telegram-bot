@@ -10,5 +10,5 @@ async def post_command(
     context.user_data["state"] = "waiting_post"
 
     await update.message.reply_text(
-        "📝 متن پست را ارسال کنید."
+        "📝 پست خود را ارسال کنید."
     )
